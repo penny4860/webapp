@@ -121,8 +121,15 @@ $("#style-image-selector").change(function()
 /* Stylize button */
 $("#stylized-button").click(async function()
 {
+    console.log("stylized-button clicked")
+    // content-img-size 에 있는 값을 가져와야함.
+    const img_size = document.getElementById('content-img-size').value;
+
     let content_tensor = await preprocess(content);
+    content_tensor = tf.image.resizeBilinear(content_tensor, [img_size, img_size]);
+
     let style_tensor = await preprocess(style);
+    style_tensor = tf.image.resizeBilinear(style_tensor, [img_size, img_size]);
 
     const startTime = performance.now();
 
