@@ -126,6 +126,10 @@ $("#stylized-button").click(async function()
     const img_size = document.getElementById('content-img-size').value;
 
     let content_tensor = await preprocess(content);
+    const original_size = content_tensor.shape;
+    const original_h = original_size[1];
+    const original_w = original_size[2];
+
     content_tensor = tf.image.resizeBilinear(content_tensor, [img_size, img_size]);
 
     let style_tensor = await preprocess(style);
@@ -145,8 +149,7 @@ $("#stylized-button").click(async function()
         let stylized = features[3];
         stylized = stylized.clipByValue(0, 255);
         // hard code
-        if (img_size != 256)
-            stylized = tf.image.resizeBilinear(stylized, [256, 256]);
+        stylized = tf.image.resizeBilinear(stylized, [original_h, original_w]);
         await tf.browser.toPixels(stylized.toInt().squeeze(), stylizedCanvas);
         
         delete stylized;
