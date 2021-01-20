@@ -143,9 +143,10 @@ $("#stylized-button").click(async function()
             return model.predict([content_tensor, style_tensor, alpha]);
         });
         let stylized = features[3];
-        // console.log(stylized);
         stylized = stylized.clipByValue(0, 255);
-
+        // hard code
+        if (img_size != 256)
+            stylized = tf.image.resizeBilinear(stylized, [256, 256]);
         await tf.browser.toPixels(stylized.toInt().squeeze(), stylizedCanvas);
         
         delete stylized;
